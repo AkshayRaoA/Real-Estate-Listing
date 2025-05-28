@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Real Estate Listings</title>
-  <link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <!-- Header / Navigation -->
@@ -24,6 +24,8 @@
         <div class="line2"></div>
         <div class="line3"></div>
       </div>
+      <div id="google_translate_element"></div>
+
     </nav>
   </header>
 
@@ -31,7 +33,8 @@
   <main>
     <!-- Search & Filter Section -->
     <section id="filters" class="filters-section">
-      <h2>Find Your Dream Property</h2>
+      <marquee><h2>Find Your Dream Property</h2></marquee><!-- Added Marquee tag by Aditthya -->
+
       <form id="filterForm" onsubmit="return false;">
         <div class="filter-group">
           <label for="searchInput">Search by Location or Title:</label>
@@ -182,6 +185,18 @@
       Designed and developed by Akshay Rao A.
     </p>
   </footer>
+<script type="text/javascript"> <!--Added Google translator by Aditthya-->
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      { pageLanguage: 'en' },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<script type="text/javascript" 
+  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
 
   <script src="script.js"></script>
 </body>
