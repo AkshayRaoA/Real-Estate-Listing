@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real Estate Listings</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header>
+    <nav>
+      <div class="logo">
+        <h1>RealEstatePro</h1>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#listings">Listings</a></li>
+        <li><a href="#favoritesSection">Favorites</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="burger">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Search & Filter Section -->
+    <section id="filters" class="filters-section">
+      <h2>Find Your Dream Property</h2>
+      <form id="filterForm" onsubmit="return false;">
+        <div class="filter-group">
+          <label for="searchInput">Search by Location or Title:</label>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="e.g., New York, Apartment"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="filter-group">
+          <label for="bedroomFilter">Bedrooms:</label>
+          <select id="bedroomFilter">
+            <option value="all">All</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="priceFilter">Max Price:</label>
+          <select id="priceFilter">
+            <option value="all">No Max</option>
+            <option value="200000">$200,000</option>
+            <option value="400000">$400,000</option>
+            <option value="600000">$600,000</option>
+            <option value="800000">$800,000</option>
+            <option value="1000000">$1,000,000</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sortFilter">Sort By:</label>
+          <select id="sortFilter">
+            <option value="default">Default</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="bedroomsAsc">Bedrooms: Low to High</option>
+            <option value="bedroomsDesc">Bedrooms: High to Low</option>
+          </select>
+        </div>
+
+        <button type="button" id="resetFiltersBtn">Reset Filters</button>
+      </form>
+    </section>
+
+    <!-- Listings Section -->
+    <section id="listings" class="listings-section">
+      <h2>Available Properties</h2>
+      <div id="property-list" class="property-list">
+        <!-- Property cards injected by JS -->
+      </div>
+      <div id="pagination" class="pagination">
+        <!-- Pagination buttons injected by JS -->
+      </div>
+    </section>
+
+    <!-- Favorites Section -->
+    <section id="favoritesSection" class="favorites-section">
+      <h2>Your Favorites</h2>
+      <ul id="favoritesList">
+        <!-- Favorites injected by JS -->
+      </ul>
+    </section>
+
+    <!-- Modal for Property Details -->
+    <div id="propertyModal" class="modal hidden">
+      <div class="modal-content">
+        <span id="modalClose" class="modal-close">&times;</span>
+        <h3 id="modalTitle">Property Title</h3>
+        <p id="modalDescription">Property Description</p>
+
+        <ul id="modalDetails" class="modal-details">
+          <!-- Details injected by JS -->
+        </ul>
+
+        <div id="modalGallery" class="modal-gallery">
+          <!-- Image thumbnails injected by JS -->
+        </div>
+
+        <button id="favoriteBtn" class="favorite-btn">Add to Favorites</button>
+      </div>
+    </div>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <h2>About RealEstatePro</h2>
+      <p>
+        RealEstatePro is your trusted platform to find the perfect home or
+        investment property. With a wide range of listings, we aim to
+        simplify your real estate journey.
+      </p>
+      <p>
+        Our platform provides detailed property information, advanced search
+        filters, and the ability to save your favorite properties for easy
+        access later.
+      </p>
+      <img
+        src="https://images.unsplash.com/photo-1501183638714-1c1e2d6614b4?auto=format&fit=crop&w=800&q=60"
+        alt="Happy homeowners"
+        class="about-image"
+      />
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <h2>Contact Us</h2>
+      <form id="contactForm" onsubmit="return false;">
+        <div class="form-group">
+          <label for="nameInput">Name:</label>
+          <input
+            type="text"
+            id="nameInput"
+            placeholder="Your Name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="emailInput">Email:</label>
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Your Email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="messageInput">Message:</label>
+          <textarea
+            id="messageInput"
+            placeholder="Write your message here..."
+            required
+          ></textarea>
+        </div>
+        <button type="submit" id="submitContactBtn">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 RealEstatePro. All rights reserved.</p>
+    <p>
+      Designed and developed by YourName.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

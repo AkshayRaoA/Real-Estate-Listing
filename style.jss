@@ -1,0 +1,422 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header & Navigation */
+header {
+  background-color: #004d99;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  user-select: none;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  transition: border-bottom 0.3s ease;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+  border-bottom: 2px solid #ffd700;
+}
+
+/* Burger Menu */
+.burger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* Search & Filter Section */
+.search-filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 0 15px #ddd;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-filter-section input,
+.search-filter-section select {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-width: 150px;
+  transition: border-color 0.3s;
+}
+
+.search-filter-section input:focus,
+.search-filter-section select:focus {
+  border-color: #004d99;
+  outline: none;
+}
+
+/* Property List */
+.property-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.property-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.property-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+.property-card:hover img {
+  filter: brightness(90%);
+}
+
+.property-info {
+  padding: 1rem 1.2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.property-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+  color: #004d99;
+}
+
+.property-info p {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  color: #555;
+}
+
+.property-info .price {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #0066cc;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  z-index: 9999;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem 2.5rem;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,0,0,0.25);
+  animation: modalShow 0.3s ease forwards;
+}
+
+@keyframes modalShow {
+  from {opacity: 0; transform: translateY(-50px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close:hover {
+  color: #000;
+}
+
+.modal-content h2 {
+  margin-bottom: 1rem;
+  color: #004d99;
+}
+
+.modal-content p {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  color: #444;
+}
+
+/* Modal Gallery */
+.modal-gallery {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+
+.modal-gallery img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.modal-gallery img.active,
+.modal-gallery img:hover {
+  border-color: #004d99;
+}
+
+/* Modal Details List */
+.modal-content ul {
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+.modal-content ul li {
+  padding: 0.3rem 0;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Favorite Button */
+button#favoriteBtn {
+  background-color: #004d99;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button#favoriteBtn:hover {
+  background-color: #003366;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 3rem;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #004d99;
+  background-color: white;
+  color: #004d99;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button.active,
+.pagination button:hover {
+  background-color: #004d99;
+  color: white;
+}
+
+/* Favorites Section */
+#favoritesSection {
+  background-color: white;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #ddd;
+}
+
+#favoritesSection h2 {
+  margin-bottom: 1.5rem;
+  color: #004d99;
+}
+
+/* Info Sections */
+.info-section {
+  max-width: 800px;
+  margin: 3rem auto;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #ddd;
+}
+
+.info-section h2 {
+  margin-bottom: 1rem;
+  color: #004d99;
+}
+
+.info-section p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Contact Form */
+form#contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+form#contactForm label {
+  font-weight: 600;
+  color: #333;
+}
+
+form#contactForm input,
+form#contactForm textarea {
+  padding: 0.7rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  transition: border-color 0.3s ease;
+}
+
+form#contactForm input:focus,
+form#contactForm textarea:focus {
+  border-color: #004d99;
+  outline: none;
+}
+
+form#contactForm button {
+  width: 150px;
+  align-self: flex-start;
+  background-color: #004d99;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 7px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form#contactForm button:hover {
+  background-color: #003366;
+}
+
+.form-message {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: green;
+}
+
+/* Footer */
+footer {
+  background-color: #004d99;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: auto;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  nav ul {
+    flex-direction: column;
+    background-color: #004d99;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 200px;
+    border-radius: 0 0 0 8px;
+    display: none;
+  }
+  nav ul.nav-active {
+    display: flex;
+  }
+  nav ul li a {
+    padding: 1rem 1.5rem;
+  }
+  .burger {
+    display: flex;
+  }
+}
+
