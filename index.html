@@ -32,7 +32,7 @@
   <main>
     <!-- Search & Filter Section -->
     <section id="filters" class="filters-section">
-      <marquee><h2>Find Your Dream Property</h2></marquee><!-- Added Marquee tag by Aditthya -->
+      <marquee><h2>Find Your Dream Property</h2></marquee>
 
       <form id="filterForm" onsubmit="return false;">
         <div class="filter-group">
@@ -42,23 +42,18 @@
             id="searchInput"
             placeholder="e.g., New York, Apartment"
             autocomplete="off"
+            aria-label="Search by location or title"
           />
         </div>
 
         <div id="searchContainer">
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search by location or title"
-            aria-label="Search properties"
-          />
-
           <select id="bedroomFilter" aria-label="Filter by minimum bedrooms">
             <option value="all">All bedrooms</option>
             <option value="1">1+ Bedrooms</option>
             <option value="2">2+ Bedrooms</option>
             <option value="3">3+ Bedrooms</option>
             <option value="4">4+ Bedrooms</option>
+            <option value="5">5+ Bedrooms</option>
           </select>
 
           <select id="priceFilter" aria-label="Filter by max price">
@@ -66,95 +61,35 @@
             <option value="100000">$100,000 or less</option>
             <option value="200000">$200,000 or less</option>
             <option value="300000">$300,000 or less</option>
+            <option value="400000">$400,000 or less</option>
+            <option value="600000">$600,000 or less</option>
+            <option value="800000">$800,000 or less</option>
+            <option value="1000000">$1,000,000 or less</option>
           </select>
 
           <select id="sortFilter" aria-label="Sort properties">
-            <option value="">Sort by</option>
+            <option value="default">Sort by</option>
             <option value="priceAsc">Price: Low to High</option>
             <option value="priceDesc">Price: High to Low</option>
             <option value="bedroomsAsc">Bedrooms: Fewest to Most</option>
             <option value="bedroomsDesc">Bedrooms: Most to Fewest</option>
           </select>
 
-          <button id="clearFilters" aria-label="Clear all filters and search">Clear Filters</button>
+          <button id="clearFilters" aria-label="Clear all filters and search" type="button">Clear Filters</button>
         </div>
 
         <div id="resultsCount" aria-live="polite" style="font-weight:bold;"></div>
         <div id="avgPrice" aria-live="polite" style="font-weight:bold;"></div>
-
-        <div id="property-list" aria-live="polite" aria-relevant="additions"></div>
-
-        <div id="pagination" role="navigation" aria-label="Pagination controls"></div>
-
-        <h2>Favorites</h2>
-        <ul id="favoritesList" aria-live="polite" aria-relevant="additions"></ul>
-
-        <!-- Modal structure -->
-        <div
-          id="propertyModal"
-          class="hidden"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modalTitle"
-          aria-describedby="modalDesc"
-        >
-          <div class="modal-content">
-            <button id="modalClose" aria-label="Close modal">&times;</button>
-            <h2 id="modalTitle"></h2>
-            <img id="modalImage" alt="" />
-            <p id="modalDesc"></p>
-            <p><strong>Price:</strong> <span id="modalPrice"></span></p>
-            <p><strong>Bedrooms:</strong> <span id="modalBedrooms"></span></p>
-            <p><strong>Amenities:</strong> <span id="modalAmenities"></span></p>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <label for="bedroomFilter">Bedrooms:</label>
-          <select id="bedroomFilter">
-            <option value="all">All</option>
-            <option value="1">1+</option>
-            <option value="2">2+</option>
-            <option value="3">3+</option>
-            <option value="4">4+</option>
-            <option value="5">5+</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label for="priceFilter">Max Price:</label>
-          <select id="priceFilter">
-            <option value="all">No Max</option>
-            <option value="200000">$200,000</option>
-            <option value="400000">$400,000</option>
-            <option value="600000">$600,000</option>
-            <option value="800000">$800,000</option>
-            <option value="1000000">$1,000,000</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <label for="sortFilter">Sort By:</label>
-          <select id="sortFilter">
-            <option value="default">Default</option>
-            <option value="priceAsc">Price: Low to High</option>
-            <option value="priceDesc">Price: High to Low</option>
-            <option value="bedroomsAsc">Bedrooms: Low to High</option>
-            <option value="bedroomsDesc">Bedrooms: High to Low</option>
-          </select>
-        </div>
-
-        <button type="button" id="resetFiltersBtn">Reset Filters</button>
       </form>
     </section>
 
     <!-- Listings Section -->
     <section id="listings" class="listings-section">
       <h2>Available Properties</h2>
-      <div id="property-list" class="property-list">
+      <div id="property-list" class="property-list" aria-live="polite" aria-relevant="additions">
         <!-- Property cards injected by JS -->
       </div>
-      <div id="pagination" class="pagination">
+      <div id="pagination" class="pagination" role="navigation" aria-label="Pagination controls">
         <!-- Pagination buttons injected by JS -->
       </div>
     </section>
@@ -162,26 +97,24 @@
     <!-- Favorites Section -->
     <section id="favoritesSection" class="favorites-section">
       <h2>Your Favorites</h2>
-      <ul id="favoritesList">
+      <ul id="favoritesList" aria-live="polite" aria-relevant="additions">
         <!-- Favorites injected by JS -->
       </ul>
     </section>
 
     <!-- Modal for Property Details -->
-    <div id="propertyModal" class="modal hidden">
+    <div id="propertyModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
       <div class="modal-content">
-        <span id="modalClose" class="modal-close">&times;</span>
-        <h3 id="modalTitle">Property Title</h3>
-        <p id="modalDescription">Property Description</p>
-
-        <ul id="modalDetails" class="modal-details">
-          <!-- Details injected by JS -->
-        </ul>
-
+        <button id="modalClose" aria-label="Close modal" class="modal-close">&times;</button>
+        <h2 id="modalTitle"></h2>
+        <img id="modalImage" alt="" />
+        <p id="modalDesc"></p>
+        <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+        <p><strong>Bedrooms:</strong> <span id="modalBedrooms"></span></p>
+        <p><strong>Amenities:</strong> <span id="modalAmenities"></span></p>
         <div id="modalGallery" class="modal-gallery">
           <!-- Image thumbnails injected by JS -->
         </div>
-
         <button id="favoriteBtn" class="favorite-btn">Add to Favorites</button>
       </div>
     </div>
@@ -234,7 +167,7 @@
   </footer>
 
   <script type="text/javascript">
-    <!--Added Google translator by Aditthya-->
+    // Added Google translator by Aditthya
     function googleTranslateElementInit() {
       new google.translate.TranslateElement(
         { pageLanguage: 'en' },
