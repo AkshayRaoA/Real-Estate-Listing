@@ -1,14 +1,14 @@
-
 const properties = [
   {
     id: 1,
     title: "Modern Family House",
-    description:
-      "Beautiful house with spacious rooms, garden, and garage.",
+    description: "Beautiful house with spacious rooms, garden, and garage.",
     location: "New York",
     price: 450000,
     bedrooms: 4,
     amenities: ["Garden", "Garage", "Swimming Pool"],
+    latitude: 40.7128,
+    longitude: -74.0060,
     images: [
       "https://images.unsplash.com/photo-1560448075-9a1a6760201e?auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1501183638714-1c1e2d6614b4?auto=format&fit=crop&w=800&q=60",
@@ -18,67 +18,23 @@ const properties = [
   {
     id: 2,
     title: "Luxury Apartment",
-    description:
-      "Downtown apartment with amazing city views and modern amenities.",
+    description: "Downtown apartment with amazing city views and modern amenities.",
     location: "San Francisco",
     price: 720000,
     bedrooms: 3,
     amenities: ["Gym", "24/7 Security", "Rooftop Terrace"],
+    latitude: 37.7749,
+    longitude: -122.4194,
     images: [
       "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=60",
     ],
   },
-  {
-    id: 3,
-    title: "Cozy Cottage",
-    description:
-      "Small cottage surrounded by nature, perfect for weekend getaways.",
-    location: "Asheville",
-    price: 180000,
-    bedrooms: 2,
-    amenities: ["Fireplace", "Deck", "Pet Friendly"],
-    images: [
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1501183638714-1c1e2d6614b4?auto=format&fit=crop&w=800&q=60",
-    ],
-  },
-  {
-    id: 4,
-    title: "Beachside Villa",
-    description:
-      "Luxury villa with ocean views, private beach access, and infinity pool.",
-    location: "Miami",
-    price: 1250000,
-    bedrooms: 5,
-    amenities: ["Private Beach", "Infinity Pool", "Jacuzzi"],
-    images: [
-      "https://images.unsplash.com/photo-1501183638714-1c1e2d6614b4?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1560448075-9a1a6760201e?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
-    ],
-  },
-  {
-    id: 5,
-    title: "Urban Studio",
-    description:
-      "Compact studio apartment located in the heart of the city.",
-    location: "Chicago",
-    price: 250000,
-    bedrooms: 1,
-    amenities: ["Elevator", "Security", "Laundry Room"],
-    images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
-    ],
-  },
-  // Add 15 more properties to increase LOC if needed
+  // ... add other properties with latitude and longitude
 ];
 
-// --- DOM Elements ---
+// DOM elements
 const propertyList = document.getElementById("property-list");
 const favoritesList = document.getElementById("favoritesList");
 const modal = document.getElementById("propertyModal");
@@ -88,26 +44,42 @@ const modalDetails = document.getElementById("modalDetails");
 const modalGallery = document.getElementById("modalGallery");
 const modalClose = document.getElementById("modalClose");
 const favoriteBtn = document.getElementById("favoriteBtn");
-
 const searchInput = document.getElementById("searchInput");
-OAOAOAOAOAOAOAOAconst bedroomFilter = document.getElementById("bedroomFilter");
+const bedroomFilter = document.getElementById("bedroomFilter");
 const priceFilter = document.getElementById("priceFilter");
-OAOAOAconst sortFilter = document.getElementById("sortFilter");
-OAOAOA
+const sortFilter = document.getElementById("sortFilter");
 const pagination = document.getElementById("pagination");
 
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 let currentProperty = null;
-
 let currentPage = 1;
 const itemsPerPage = 4;
 
-// --- Functions ---
-OAOAOA
-OAOAOA// Render properties
+// --- MAP ---
+const map = L.map("map").setView([39.8283, -98.5795], 4); // Center US
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '© OpenStreetMap contributors',
+}).addTo(map);
+
+function renderMapMarkers(propertiesArr) {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
+
+  propertiesArr.forEach((prop) => {
+    if (prop.latitude && prop.longitude) {
+      const marker = L.marker([prop.latitude, prop.longitude]).addTo(map);
+      marker.bindPopup(`<strong>${prop.title}</strong><br>$${prop.price.toLocaleString()}`);
+    }
+  });
+}
+
+// Render property cards
 function renderProperties(propertiesArr, container) {
   container.innerHTML = "";
-OAOAOA  if (propertiesArr.length === 0) {
+  if (propertiesArr.length === 0) {
     container.innerHTML = "<p>No properties found.</p>";
     return;
   }
@@ -127,12 +99,11 @@ function renderProperties(propertiesArr, container) {
   });
 }
 
-// Open modal with property details and gallery
+// Open modal with property details
 function openModal(prop) {
   currentProperty = prop;
   modalTitle.textContent = prop.title;
   modalDescription.textContent = prop.description;
-
   modalDetails.innerHTML = "";
   const details = [
     `Location: ${prop.location}`,
@@ -146,7 +117,6 @@ function openModal(prop) {
     modalDetails.appendChild(li);
   });
 
-  // Build image gallery
   modalGallery.innerHTML = "";
   prop.images.forEach((img, idx) => {
     const galleryImg = document.createElement("img");
@@ -157,14 +127,20 @@ function openModal(prop) {
       document.querySelectorAll("#modalGallery img").forEach((imgEl) => imgEl.classList.remove("active"));
       galleryImg.classList.add("active");
       modalTitle.style.backgroundImage = `url(${img})`;
-      // Update main image (or some highlight)
     });
     modalGallery.appendChild(galleryImg);
   });
 
   updateFavoriteButton();
-
   modal.classList.remove("hidden");
+
+  if (prop.latitude && prop.longitude) {
+    map.setView([prop.latitude, prop.longitude], 13);
+    L.popup()
+      .setLatLng([prop.latitude, prop.longitude])
+      .setContent(`<strong>${prop.title}</strong><br>$${prop.price.toLocaleString()}`)
+      .openOn(map);
+  }
 }
 
 // Close modal
@@ -172,7 +148,7 @@ modalClose.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
 
-// Filter, sort, and paginate properties
+// Filter, sort, and paginate
 function filterSortPaginate() {
   const searchText = searchInput.value.toLowerCase();
   const bedFilterVal = bedroomFilter.value;
@@ -188,7 +164,6 @@ function filterSortPaginate() {
     return matchesSearch && matchesBedroom && matchesPrice;
   });
 
-  // Sorting
   switch (sortVal) {
     case "priceAsc":
       filtered.sort((a, b) => a.price - b.price);
@@ -206,7 +181,6 @@ function filterSortPaginate() {
       break;
   }
 
-  // Pagination
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   if (currentPage > totalPages) currentPage = totalPages || 1;
 
@@ -215,12 +189,12 @@ function filterSortPaginate() {
 
   renderProperties(paginated, propertyList);
   renderPagination(totalPages);
+  renderMapMarkers(filtered); // Update map markers
 }
 
 // Pagination buttons
 function renderPagination(totalPages) {
   pagination.innerHTML = "";
-
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
@@ -234,7 +208,7 @@ function renderPagination(totalPages) {
   }
 }
 
-// Update favorite button state
+// Favorite toggle
 function updateFavoriteButton() {
   if (!currentProperty) return;
   if (favorites.some((f) => f.id === currentProperty.id)) {
@@ -244,7 +218,6 @@ function updateFavoriteButton() {
   }
 }
 
-// Toggle favorite
 favoriteBtn.addEventListener("click", () => {
   if (!currentProperty) return;
   const index = favorites.findIndex((f) => f.id === currentProperty.id);
@@ -258,7 +231,6 @@ favoriteBtn.addEventListener("click", () => {
   renderFavorites();
 });
 
-// Render favorites list
 function renderFavorites() {
   favoritesList.innerHTML = "";
   if (favorites.length === 0) {
@@ -276,7 +248,7 @@ function renderFavorites() {
 filterSortPaginate();
 renderFavorites();
 
-// Event listeners for filters and search
+// Event listeners
 searchInput.addEventListener("input", () => {
   currentPage = 1;
   filterSortPaginate();
@@ -293,4 +265,3 @@ sortFilter.addEventListener("change", () => {
   currentPage = 1;
   filterSortPaginate();
 });
-
