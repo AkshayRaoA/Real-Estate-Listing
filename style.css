@@ -1,3 +1,25 @@
+/* CSS Variables for Light Theme */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+  --primary-color: #004d99;
+  --secondary-color: #0066cc;
+  --accent-color: #ffd700;
+  --box-shadow-color: #ddd;
+  --modal-bg: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark Theme Variables */
+.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --primary-color: #bb86fc;
+  --secondary-color: #03dac6;
+  --accent-color: #03dac6;
+  --box-shadow-color: #333;
+  --modal-bg: rgba(255, 255, 255, 0.1);
+}
+
 /* Reset */
 * {
   box-sizing: border-box;
@@ -7,8 +29,8 @@
 }
 
 body {
-  background-color: #ffffff;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   line-height: 1.6;
   min-height: 100vh;
   display: flex;
@@ -18,8 +40,8 @@ body {
 
 /* Header & Navigation */
 header {
-  background-color: #004d99;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--text-color);
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
@@ -36,6 +58,14 @@ header {
   user-select: none;
 }
 
+#themeToggle {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 nav ul {
   list-style: none;
   display: flex;
@@ -43,7 +73,7 @@ nav ul {
 }
 
 nav ul li a {
-  color: white;
+  color: var(--text-color);
   text-decoration: none;
   font-weight: 600;
   padding: 0.5rem 0;
@@ -52,7 +82,7 @@ nav ul li a {
 
 nav ul li a.active,
 nav ul li a:hover {
-  border-bottom: 2px solid #ffd700;
+  border-bottom: 2px solid var(--accent-color);
 }
 
 /* Burger Menu */
@@ -66,7 +96,7 @@ nav ul li a:hover {
 .burger div {
   width: 25px;
   height: 3px;
-  background-color: white;
+  background-color: var(--text-color);
   border-radius: 2px;
 }
 
@@ -76,8 +106,8 @@ nav ul li a:hover {
   flex-wrap: wrap;
   gap: 1rem;
   padding: 1rem 2rem;
-  background-color: white;
-  box-shadow: 0 0 15px #ddd;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 15px var(--box-shadow-color);
   align-items: center;
   justify-content: center;
 }
@@ -94,7 +124,7 @@ nav ul li a:hover {
 
 .search-filter-section input:focus,
 .search-filter-section select:focus {
-  border-color: #004d99;
+  border-color: var(--primary-color);
   outline: none;
 }
 
@@ -109,7 +139,7 @@ nav ul li a:hover {
 }
 
 .property-card {
-  background: white;
+  background: var(--bg-color);
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   overflow: hidden;
@@ -146,7 +176,7 @@ nav ul li a:hover {
 .property-info h3 {
   font-size: 1.3rem;
   margin-bottom: 0.3rem;
-  color: #004d99;
+  color: var(--primary-color);
 }
 
 .property-info p {
@@ -158,7 +188,7 @@ nav ul li a:hover {
 .property-info .price {
   font-weight: 700;
   font-size: 1.2rem;
-  color: #0066cc;
+  color: var(--secondary-color);
 }
 
 /* Modal */
@@ -168,7 +198,7 @@ nav ul li a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: var(--modal-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +211,7 @@ nav ul li a:hover {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-color);
   border-radius: 15px;
   max-width: 800px;
   width: 100%;
@@ -215,7 +245,7 @@ nav ul li a:hover {
 
 .modal-content h2 {
   margin-bottom: 1rem;
-  color: #004d99;
+  color: var(--primary-color);
 }
 
 .modal-content p {
@@ -224,7 +254,6 @@ nav ul li a:hover {
   color: #444;
 }
 
-/* Modal Gallery */
 .modal-gallery {
   display: flex;
   gap: 10px;
@@ -244,10 +273,9 @@ nav ul li a:hover {
 
 .modal-gallery img.active,
 .modal-gallery img:hover {
-  border-color: #004d99;
+  border-color: var(--primary-color);
 }
 
-/* Modal Details List */
 .modal-content ul {
   list-style: none;
   margin-bottom: 1rem;
@@ -256,13 +284,12 @@ nav ul li a:hover {
 .modal-content ul li {
   padding: 0.3rem 0;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
-/* Favorite Button */
 button#favoriteBtn {
-  background-color: #004d99;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--bg-color);
   border: none;
   padding: 0.8rem 2rem;
   border-radius: 8px;
@@ -276,7 +303,6 @@ button#favoriteBtn:hover {
   background-color: #003366;
 }
 
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
@@ -286,9 +312,9 @@ button#favoriteBtn:hover {
 
 .pagination button {
   padding: 0.5rem 1rem;
-  border: 1px solid #004d99;
-  background-color: white;
-  color: #004d99;
+  border: 1px solid var(--primary-color);
+  background-color: var(--bg-color);
+  color: var(--primary-color);
   font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
@@ -297,38 +323,36 @@ button#favoriteBtn:hover {
 
 .pagination button.active,
 .pagination button:hover {
-  background-color: #004d99;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--bg-color);
 }
 
-/* Favorites Section */
 #favoritesSection {
-  background-color: white;
+  background-color: var(--bg-color);
   padding: 2rem;
   max-width: 1200px;
   margin: 2rem auto;
   border-radius: 12px;
-  box-shadow: 0 0 15px #ddd;
+  box-shadow: 0 0 15px var(--box-shadow-color);
 }
 
 #favoritesSection h2 {
   margin-bottom: 1.5rem;
-  color: #004d99;
+  color: var(--primary-color);
 }
 
-/* Info Sections */
 .info-section {
   max-width: 800px;
   margin: 3rem auto;
-  background-color: white;
+  background-color: var(--bg-color);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 0 15px #ddd;
+  box-shadow: 0 0 15px var(--box-shadow-color);
 }
 
 .info-section h2 {
   margin-bottom: 1rem;
-  color: #004d99;
+  color: var(--primary-color);
 }
 
 .info-section p {
@@ -336,7 +360,6 @@ button#favoriteBtn:hover {
   color: #555;
 }
 
-/* Contact Form */
 form#contactForm {
   display: flex;
   flex-direction: column;
@@ -345,7 +368,7 @@ form#contactForm {
 
 form#contactForm label {
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
 }
 
 form#contactForm input,
@@ -359,15 +382,15 @@ form#contactForm textarea {
 
 form#contactForm input:focus,
 form#contactForm textarea:focus {
-  border-color: #004d99;
+  border-color: var(--primary-color);
   outline: none;
 }
 
 form#contactForm button {
   width: 150px;
   align-self: flex-start;
-  background-color: #004d99;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--bg-color);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 7px;
@@ -386,10 +409,9 @@ form#contactForm button:hover {
   color: green;
 }
 
-/* Footer */
 footer {
-  background-color: #004d99;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--bg-color);
   text-align: center;
   padding: 1.5rem 1rem;
   margin-top: auto;
@@ -397,11 +419,10 @@ footer {
   font-size: 1rem;
 }
 
-/* Responsive Styles */
 @media (max-width: 900px) {
   nav ul {
     flex-direction: column;
-    background-color: #004d99;
+    background-color: var(--primary-color);
     position: absolute;
     top: 60px;
     right: 0;
@@ -419,4 +440,3 @@ footer {
     display: flex;
   }
 }
-
