@@ -420,3 +420,164 @@ footer {
   }
 }
 
+/* Container styling */
+#searchContainer {
+  margin-bottom: 1rem;
+}
+#searchContainer input,
+#searchContainer select,
+#searchContainer button {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* Results info */
+#resultsCount,
+#avgPrice {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Property list grid */
+#property-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Property card */
+.property-card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.property-card:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.property-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.property-info {
+  padding: 0.5rem;
+}
+.price {
+  color: #009578;
+  font-weight: bold;
+}
+
+/* Highlighted search matches */
+mark {
+  background-color: yellow;
+  color: black;
+}
+
+/* Hover detail overlay */
+.hover-detail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.property-card:hover .hover-detail {
+  opacity: 1;
+}
+
+/* Pagination */
+#pagination {
+  margin-top: 1rem;
+  text-align: center;
+}
+#pagination button {
+  margin: 0 0.25rem;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 3px;
+}
+#pagination button.active {
+  background: #009578;
+  color: white;
+  font-weight: bold;
+}
+
+/* Favorites list */
+#favoritesList {
+  list-style: none;
+  padding-left: 0;
+}
+#favoritesList li {
+  margin-bottom: 0.5rem;
+}
+.remove-fav-btn {
+  margin-left: 1rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 3px;
+}
+.remove-fav-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Modal Styles */
+#propertyModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right:0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+#propertyModal.hidden {
+  display: none;
+}
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 6px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+#modalClose {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+}
+#modalClose:hover {
+  color: #333;
+}
+#modalImage {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
