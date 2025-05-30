@@ -1,39 +1,3 @@
-const properties = [
-  {
-    id: 1,
-    title: "Modern Family House",
-    description: "Beautiful house with spacious rooms, garden, and garage.",
-    location: "New York",
-    price: 450000,
-    bedrooms: 4,
-    amenities: ["Garden", "Garage", "Swimming Pool"],
-    latitude: 40.7128,
-    longitude: -74.0060,
-    images: [
-      "https://images.unsplash.com/photo-1560448075-9a1a6760201e?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1501183638714-1c1e2d6614b4?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1572120360610-d971b9b2cd21?auto=format&fit=crop&w=800&q=60",
-    ],
-  },
-  {
-    id: 2,
-    title: "Luxury Apartment",
-    description: "Downtown apartment with amazing city views and modern amenities.",
-    location: "San Francisco",
-    price: 720000,
-    bedrooms: 3,
-    amenities: ["Gym", "24/7 Security", "Rooftop Terrace"],
-    latitude: 37.7749,
-    longitude: -122.4194,
-    images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=60",
-    ],
-  },
-  // ... add other properties with latitude and longitude
-];
-
 // DOM elements
 const propertyList = document.getElementById("property-list");
 const favoritesList = document.getElementById("favoritesList");
@@ -49,17 +13,50 @@ const bedroomFilter = document.getElementById("bedroomFilter");
 const priceFilter = document.getElementById("priceFilter");
 const sortFilter = document.getElementById("sortFilter");
 const pagination = document.getElementById("pagination");
+const resultsCount = document.getElementById("resultsCount");
+const avgPriceDisplay = document.getElementById("avgPrice");
+const clearFiltersBtn = document.getElementById("clearFilters");
 
+// Map
+const map = L.map("map").setView([39.8283, -98.5795], 4);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '© OpenStreetMap contributors',
+}).addTo(map);
+
+// State
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 let currentProperty = null;
 let currentPage = 1;
 const itemsPerPage = 4;
 
-// --- MAP ---
-const map = L.map("map").setView([39.8283, -98.5795], 4); // Center US
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: '© OpenStreetMap contributors',
-}).addTo(map);
+// --- Utilities ---
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query})`, "gi");
+  return text.replace(regex, '<mark>$1</mark>');
+}
+
+function saveFilters() {
+  const filters = {
+    searchText: searchInput.value,
+    bedFilterVal: bedroomFilter.value,
+    priceFilterVal: priceFilter.value,
+    sortVal: sortFilter.value,
+    currentPage,
+  };
+  localStorage.setItem("filters", JSON.stringify(filters));
+}
+
+function restoreFilters() {
+  const savedFilters = JSON.parse(localStorage.getItem("filters"));
+  if (savedFilters) {
+    searchInput.value = savedFilters.searchText || "";
+    bedroomFilter.value = savedFilters.bedFilterVal || "all";
+    priceFilter.value = savedFilters.priceFilterVal || "all";
+    sortFilter.value = savedFilters.sortVal || "";
+    currentPage = savedFilters.currentPage || 1;
+  }
+}
 
 function renderMapMarkers(propertiesArr) {
   map.eachLayer((layer) => {
@@ -76,22 +73,34 @@ function renderMapMarkers(propertiesArr) {
   });
 }
 
-// Render property cards
+// --- Rendering ---
 function renderProperties(propertiesArr, container) {
   container.innerHTML = "";
   if (propertiesArr.length === 0) {
     container.innerHTML = "<p>No properties found.</p>";
+    resultsCount.textContent = "0 results found";
+    avgPriceDisplay.textContent = "";
     return;
   }
+
+  const searchText = searchInput.value.toLowerCase();
+  const avgPrice = Math.round(propertiesArr.reduce((sum, p) => sum + p.price, 0) / propertiesArr.length);
+  avgPriceDisplay.textContent = `Average Price: $${avgPrice.toLocaleString()}`;
+  resultsCount.textContent = `${propertiesArr.length} result${propertiesArr.length > 1 ? "s" : ""} found`;
+
   propertiesArr.forEach((prop) => {
     const card = document.createElement("div");
     card.className = "property-card";
     card.innerHTML = `
       <img src="${prop.images[0]}" alt="${prop.title}" />
       <div class="property-info">
-        <h3>${prop.title}</h3>
-        <p>${prop.location}</p>
+        <h3>${highlightMatch(prop.title, searchText)}</h3>
+        <p>${highlightMatch(prop.location, searchText)}</p>
         <p class="price">$${prop.price.toLocaleString()}</p>
+      </div>
+      <div class="hover-detail">
+        <p>${prop.bedrooms} Bedrooms</p>
+        <p>${prop.amenities.slice(0, 2).join(", ")}${prop.amenities.length > 2 ? ", ..." : ""}</p>
       </div>
     `;
     card.addEventListener("click", () => openModal(prop));
@@ -99,11 +108,53 @@ function renderProperties(propertiesArr, container) {
   });
 }
 
-// Open modal with property details
+function renderPagination(totalPages) {
+  pagination.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      filterSortPaginate();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    pagination.appendChild(btn);
+  }
+}
+
+function renderFavorites() {
+  favoritesList.innerHTML = "";
+  if (favorites.length === 0) {
+    favoritesList.innerHTML = "<p>No favorites added.</p>";
+    return;
+  }
+  favorites.forEach((fav) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${fav.title} - $${fav.price.toLocaleString()} 
+      <button class="remove-fav-btn" data-id="${fav.id}" aria-label="Remove ${fav.title} from favorites">Remove</button>
+    `;
+    favoritesList.appendChild(li);
+  });
+
+  document.querySelectorAll(".remove-fav-btn").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      const id = parseInt(e.target.dataset.id);
+      favorites = favorites.filter(f => f.id !== id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      updateFavoriteButton();
+      renderFavorites();
+    })
+  );
+}
+
+// --- Modal ---
 function openModal(prop) {
   currentProperty = prop;
   modalTitle.textContent = prop.title;
   modalDescription.textContent = prop.description;
+
   modalDetails.innerHTML = "";
   const details = [
     `Location: ${prop.location}`,
@@ -143,12 +194,39 @@ function openModal(prop) {
   }
 }
 
-// Close modal
 modalClose.addEventListener("click", () => {
   modal.classList.add("hidden");
 });
 
-// Filter, sort, and paginate
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    modal.classList.add("hidden");
+  }
+});
+
+function updateFavoriteButton() {
+  if (!currentProperty) return;
+  if (favorites.some((f) => f.id === currentProperty.id)) {
+    favoriteBtn.textContent = "Remove from Favorites";
+  } else {
+    favoriteBtn.textContent = "Add to Favorites";
+  }
+}
+
+favoriteBtn.addEventListener("click", () => {
+  if (!currentProperty) return;
+  const index = favorites.findIndex((f) => f.id === currentProperty.id);
+  if (index >= 0) {
+    favorites.splice(index, 1);
+  } else {
+    favorites.push(currentProperty);
+  }
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  updateFavoriteButton();
+  renderFavorites();
+});
+
+// --- Filtering, Sorting, Pagination ---
 function filterSortPaginate() {
   const searchText = searchInput.value.toLowerCase();
   const bedFilterVal = bedroomFilter.value;
@@ -177,8 +255,6 @@ function filterSortPaginate() {
     case "bedroomsDesc":
       filtered.sort((a, b) => b.bedrooms - a.bedrooms);
       break;
-    default:
-      break;
   }
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -189,79 +265,41 @@ function filterSortPaginate() {
 
   renderProperties(paginated, propertyList);
   renderPagination(totalPages);
-  renderMapMarkers(filtered); // Update map markers
+  renderMapMarkers(filtered);
+  saveFilters();
 }
 
-// Pagination buttons
-function renderPagination(totalPages) {
-  pagination.innerHTML = "";
-  for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    if (i === currentPage) btn.classList.add("active");
-    btn.addEventListener("click", () => {
-      currentPage = i;
-      filterSortPaginate();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    pagination.appendChild(btn);
-  }
-}
-
-// Favorite toggle
-function updateFavoriteButton() {
-  if (!currentProperty) return;
-  if (favorites.some((f) => f.id === currentProperty.id)) {
-    favoriteBtn.textContent = "Remove from Favorites";
-  } else {
-    favoriteBtn.textContent = "Add to Favorites";
-  }
-}
-
-favoriteBtn.addEventListener("click", () => {
-  if (!currentProperty) return;
-  const index = favorites.findIndex((f) => f.id === currentProperty.id);
-  if (index >= 0) {
-    favorites.splice(index, 1);
-  } else {
-    favorites.push(currentProperty);
-  }
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  updateFavoriteButton();
-  renderFavorites();
-});
-
-function renderFavorites() {
-  favoritesList.innerHTML = "";
-  if (favorites.length === 0) {
-    favoritesList.innerHTML = "<p>No favorites added.</p>";
-    return;
-  }
-  favorites.forEach((fav) => {
-    const li = document.createElement("li");
-    li.textContent = `${fav.title} - $${fav.price.toLocaleString()}`;
-    favoritesList.appendChild(li);
-  });
-}
-
-// Initial render
-filterSortPaginate();
-renderFavorites();
-
-// Event listeners
+// --- Events ---
 searchInput.addEventListener("input", () => {
   currentPage = 1;
   filterSortPaginate();
 });
+
 bedroomFilter.addEventListener("change", () => {
   currentPage = 1;
   filterSortPaginate();
 });
+
 priceFilter.addEventListener("change", () => {
   currentPage = 1;
   filterSortPaginate();
 });
+
 sortFilter.addEventListener("change", () => {
   currentPage = 1;
   filterSortPaginate();
 });
+
+clearFiltersBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  bedroomFilter.value = "all";
+  priceFilter.value = "all";
+  sortFilter.value = "";
+  currentPage = 1;
+  filterSortPaginate();
+});
+
+// --- Init ---
+restoreFilters();
+filterSortPaginate();
+renderFavorites();
