@@ -294,3 +294,198 @@ sortFilter.addEventListener("change", () => {
   filterSortPaginate();
 });
 
+// --- New DOM elements for new features ---
+const resultsCount = document.getElementById("resultsCount");
+const avgPriceDisplay = document.getElementById("avgPrice");
+const clearFiltersBtn = document.getElementById("clearFilters");
+
+// Restore filters and page from localStorage on load
+function restoreFilters() {
+  const savedFilters = JSON.parse(localStorage.getItem("filters"));
+  if (savedFilters) {
+    searchInput.value = savedFilters.searchText || "";
+    bedroomFilter.value = savedFilters.bedFilterVal || "all";
+    priceFilter.value = savedFilters.priceFilterVal || "all";
+    sortFilter.value = savedFilters.sortVal || "";
+    currentPage = savedFilters.currentPage || 1;
+  }
+}
+restoreFilters();
+
+// Clear filters button functionality
+clearFiltersBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  bedroomFilter.value = "all";
+  priceFilter.value = "all";
+  sortFilter.value = "";
+  currentPage = 1;
+  filterSortPaginate();
+});
+
+// Highlight search matches helper
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query})`, "gi");
+  return text.replace(regex, '<mark>$1</mark>');
+}
+
+// Update favorite rendering with remove button
+function renderFavorites() {
+  favoritesList.innerHTML = "";
+  if (favorites.length === 0) {
+    favoritesList.innerHTML = "<p>No favorites added.</p>";
+    return;
+  }
+  favorites.forEach((fav) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${fav.title} - $${fav.price.toLocaleString()} 
+      <button class="remove-fav-btn" data-id="${fav.id}" aria-label="Remove ${fav.title} from favorites">Remove</button>
+    `;
+    favoritesList.appendChild(li);
+  });
+
+  // Attach remove event listeners
+  document.querySelectorAll(".remove-fav-btn").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      const id = parseInt(e.target.dataset.id);
+      favorites = favorites.filter(f => f.id !== id);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      updateFavoriteButton();
+      renderFavorites();
+    })
+  );
+}
+
+// Extended renderProperties with highlight and hover detail overlay
+function renderProperties(propertiesArr, container) {
+  container.innerHTML = "";
+  if (propertiesArr.length === 0) {
+    container.innerHTML = "<p>No properties found.</p>";
+    resultsCount.textContent = "0 results found";
+    avgPriceDisplay.textContent = "";
+    return;
+  }
+  const searchText = searchInput.value.toLowerCase();
+
+  // Calculate average price of current filtered properties
+  const avgPrice = Math.round(propertiesArr.reduce((sum, p) => sum + p.price, 0) / propertiesArr.length);
+  avgPriceDisplay.textContent = `Average Price: $${avgPrice.toLocaleString()}`;
+
+  resultsCount.textContent = `${propertiesArr.length} result${propertiesArr.length > 1 ? "s" : ""} found`;
+
+  propertiesArr.forEach((prop) => {
+    const card = document.createElement("div");
+    card.className = "property-card";
+    card.innerHTML = `
+      <img src="${prop.images[0]}" alt="${prop.title}" />
+      <div class="property-info">
+        <h3>${highlightMatch(prop.title, searchText)}</h3>
+        <p>${highlightMatch(prop.location, searchText)}</p>
+        <p class="price">$${prop.price.toLocaleString()}</p>
+      </div>
+      <div class="hover-detail">
+        <p>${prop.bedrooms} Bedrooms</p>
+        <p>${prop.amenities.slice(0, 2).join(", ")}${prop.amenities.length > 2 ? ", ..." : ""}</p>
+      </div>
+    `;
+
+    card.addEventListener("click", () => openModal(prop));
+    container.appendChild(card);
+  });
+}
+
+// Persist filters and page to localStorage
+function saveFilters() {
+  const filters = {
+    searchText: searchInput.value,
+    bedFilterVal: bedroomFilter.value,
+    priceFilterVal: priceFilter.value,
+    sortVal: sortFilter.value,
+    currentPage,
+  };
+  localStorage.setItem("filters", JSON.stringify(filters));
+}
+
+// Updated filterSortPaginate to save filters
+function filterSortPaginate() {
+  const searchText = searchInput.value.toLowerCase();
+  const bedFilterVal = bedroomFilter.value;
+  const priceFilterVal = priceFilter.value;
+  const sortVal = sortFilter.value;
+
+  let filtered = properties.filter((prop) => {
+    const matchesSearch =
+      prop.location.toLowerCase().includes(searchText) ||
+      prop.title.toLowerCase().includes(searchText);
+    const matchesBedroom = bedFilterVal === "all" || prop.bedrooms >= parseInt(bedFilterVal);
+    const matchesPrice = priceFilterVal === "all" || prop.price <= parseInt(priceFilterVal);
+    return matchesSearch && matchesBedroom && matchesPrice;
+  });
+
+  // Sorting
+  switch (sortVal) {
+    case "priceAsc":
+      filtered.sort((a, b) => a.price - b.price);
+      break;
+    case "priceDesc":
+      filtered.sort((a, b) => b.price - a.price);
+      break;
+    case "bedroomsAsc":
+      filtered.sort((a, b) => a.bedrooms - b.bedrooms);
+      break;
+    case "bedroomsDesc":
+      filtered.sort((a, b) => b.bedrooms - a.bedrooms);
+      break;
+    default:
+      break;
+  }
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  if (currentPage > totalPages) currentPage = totalPages || 1;
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const paginated = filtered.slice(start, start + itemsPerPage);
+
+  renderProperties(paginated, propertyList);
+  renderPagination(totalPages);
+
+  saveFilters();
+}
+
+// Keyboard accessibility to close modal on Escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+    modal.classList.add("hidden");
+  }
+});
+
+
+.property-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.hover-detail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.property-card:hover .hover-detail {
+  opacity: 1;
+}
+*/
+
+// --- Initial render with restored filters and saved page ---
+filterSortPaginate();
+renderFavorites();
+

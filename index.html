@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Real Estate Listings</title>
-<link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <!-- Header / Navigation -->
@@ -25,7 +25,6 @@
         <div class="line3"></div>
       </div>
       <div id="google_translate_element"></div>
-
     </nav>
   </header>
 
@@ -46,9 +45,69 @@
           />
         </div>
 
+        <div id="searchContainer">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by location or title"
+            aria-label="Search properties"
+          />
 
+          <select id="bedroomFilter" aria-label="Filter by minimum bedrooms">
+            <option value="all">All bedrooms</option>
+            <option value="1">1+ Bedrooms</option>
+            <option value="2">2+ Bedrooms</option>
+            <option value="3">3+ Bedrooms</option>
+            <option value="4">4+ Bedrooms</option>
+          </select>
 
+          <select id="priceFilter" aria-label="Filter by max price">
+            <option value="all">All prices</option>
+            <option value="100000">$100,000 or less</option>
+            <option value="200000">$200,000 or less</option>
+            <option value="300000">$300,000 or less</option>
+          </select>
 
+          <select id="sortFilter" aria-label="Sort properties">
+            <option value="">Sort by</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="bedroomsAsc">Bedrooms: Fewest to Most</option>
+            <option value="bedroomsDesc">Bedrooms: Most to Fewest</option>
+          </select>
+
+          <button id="clearFilters" aria-label="Clear all filters and search">Clear Filters</button>
+        </div>
+
+        <div id="resultsCount" aria-live="polite" style="font-weight:bold;"></div>
+        <div id="avgPrice" aria-live="polite" style="font-weight:bold;"></div>
+
+        <div id="property-list" aria-live="polite" aria-relevant="additions"></div>
+
+        <div id="pagination" role="navigation" aria-label="Pagination controls"></div>
+
+        <h2>Favorites</h2>
+        <ul id="favoritesList" aria-live="polite" aria-relevant="additions"></ul>
+
+        <!-- Modal structure -->
+        <div
+          id="propertyModal"
+          class="hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modalTitle"
+          aria-describedby="modalDesc"
+        >
+          <div class="modal-content">
+            <button id="modalClose" aria-label="Close modal">&times;</button>
+            <h2 id="modalTitle"></h2>
+            <img id="modalImage" alt="" />
+            <p id="modalDesc"></p>
+            <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+            <p><strong>Bedrooms:</strong> <span id="modalBedrooms"></span></p>
+            <p><strong>Amenities:</strong> <span id="modalAmenities"></span></p>
+          </div>
+        </div>
 
         <div class="filter-group">
           <label for="bedroomFilter">Bedrooms:</label>
@@ -71,7 +130,7 @@
             <option value="600000">$600,000</option>
             <option value="800000">$800,000</option>
             <option value="1000000">$1,000,000</option>
-	  </select>
+          </select>
         </div>
 
         <div class="filter-group">
@@ -153,29 +212,15 @@
       <form id="contactForm" onsubmit="return false;">
         <div class="form-group">
           <label for="nameInput">Name:</label>
-          <input
-            type="text"
-            id="nameInput"
-            placeholder="Your Name"
-            required
-          />
+          <input type="text" id="nameInput" placeholder="Your Name" required />
         </div>
         <div class="form-group">
           <label for="emailInput">Email:</label>
-          <input
-            type="email"
-            id="emailInput"
-            placeholder="Your Email"
-            required
-          />
+          <input type="email" id="emailInput" placeholder="Your Email" required />
         </div>
         <div class="form-group">
           <label for="messageInput">Message:</label>
-          <textarea
-            id="messageInput"
-            placeholder="Write your message here..."
-            required
-          ></textarea>
+          <textarea id="messageInput" placeholder="Write your message here..." required></textarea>
         </div>
         <button type="submit" id="submitContactBtn">Send Message</button>
       </form>
@@ -185,24 +230,24 @@
   <!-- Footer -->
   <footer>
     <p>&copy; 2025 RealEstatePro. All rights reserved.</p>
-    <p>
-      Designed and developed by Akshay Rao A.
-    </p>
+    <p>Designed and developed by Akshay Rao A.</p>
   </footer>
-<script type="text/javascript"> <!--Added Google translator by Aditthya-->
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-      { pageLanguage: 'en' },
-      'google_translate_element'
-    );
-  }
-</script>
 
-<script type="text/javascript" 
-  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
+  <script type="text/javascript">
+    <!--Added Google translator by Aditthya-->
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+      );
+    }
+  </script>
+
+  <script
+    type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+  ></script>
 
   <script src="script.js"></script>
 </body>
 </html>
-
