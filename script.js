@@ -299,6 +299,37 @@ clearFiltersBtn.addEventListener("click", () => {
   filterSortPaginate();
 });
 
+// Download favorites as CSV
+document.getElementById("downloadCsvBtn").addEventListener("click", () => {
+  if (favorites.length === 0) {
+    alert("No favorites to download.");
+    return;
+  }
+
+  const header = ["Title", "Location", "Price", "Bedrooms", "Amenities"];
+  const rows = favorites.map((fav) => [
+    `"${fav.title}"`,
+    `"${fav.location}"`,
+    `$${fav.price}`,
+    fav.bedrooms,
+    `"${fav.amenities.join(", ")}"`,
+  ]);
+
+  let csvContent = "data:text/csv;charset=utf-8," + header.join(",") + "\n";
+  rows.forEach((row) => {
+    csvContent += row.join(",") + "\n";
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "favorites.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
+
 // --- Init ---
 restoreFilters();
 filterSortPaginate();
